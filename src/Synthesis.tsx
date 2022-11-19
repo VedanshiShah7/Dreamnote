@@ -42,8 +42,12 @@ function Synthesis({ note }: { note: Note }) {
       fetch(uri, options)
         .then(response => response.json())
         .then(response => {
-          console.log(response.answer);
-          setOutput(response['answer'].trimStart());
+          const synthesis = response['answer'].trimStart();
+          if (synthesis) {
+            setOutput(synthesis);
+          } else {
+            setOutput("Couldn't synthesize the text :(");
+          }
         });
     } else {
     }
