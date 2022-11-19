@@ -96,7 +96,7 @@ function NoteCard({ note, updateNote }: { note: Note; updateNote: (note: Note) =
           <Heading size='md'>{note.title}</Heading>
         </CardHeader>
         <CardBody onClick={onOpen}>
-          <Text pt='2' fontSize='sm' maxWidth='20rem'>
+          <Text pt='2' fontSize='sm' maxWidth='20rem' noOfLines={10}>
             {note.text}
           </Text>
         </CardBody>
