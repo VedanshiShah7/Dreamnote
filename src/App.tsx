@@ -6,7 +6,6 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
   IconButton,
   Button,
   Menu,
@@ -18,27 +17,36 @@ import {
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, StarIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
-const Links = ['Dashboard', 'Projects', 'Team'];
+import { Link, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import Notes from './Notes';
+import Synthesis from './Synthesis';
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
+const NavLink = ({ children, to }: { children: ReactNode; to: string }) => (
+  <Box
     px={2}
     py={1}
     rounded={'md'}
     _hover={{
       textDecoration: 'none',
       bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
+    }}>
+    <Link to={to}>{children}</Link>
+  </Box>
 );
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const loggedIn = false;
+  const links = [
+    { text: 'Notes', path: 'notes' },
+    { text: 'Synthesis', path: 'synthesis' },
+  ];
+  if (!loggedIn) {
+    links.push({ text: 'Log In', path: 'login' });
+  }
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -52,25 +60,19 @@ function App() {
           />
           <HStack spacing={8} alignItems={'center'}>
             <Box pl={5}>
-              <StarIcon />
+              <img src='logo.png' alt='logo' height='40px' width='40px' />
             </Box>
-            <HStack
-              as={'nav'}
-              spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+            <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+              {links.map(link => (
+                <NavLink key={link.path} to={link.path}>
+                  {link.text}
+                </NavLink>
               ))}
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
             <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}>
+              <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                 <Avatar
                   size={'sm'}
                   src={
@@ -91,18 +93,25 @@ function App() {
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+              {links.map(link => (
+                <NavLink key={link.path} to={link.path}>
+                  {link.text}
+                </NavLink>
               ))}
             </Stack>
           </Box>
         ) : null}
       </Box>
 
-      <Box p={4}>Main Content Here</Box>
+      <Box p={4}>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/notes' element={<Notes />} />
+          <Route path='/synthesis' element={<Synthesis />} />
+        </Routes>
+      </Box>
     </>
   );
 }
-
 
 export default App;
