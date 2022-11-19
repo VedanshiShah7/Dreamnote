@@ -82,7 +82,7 @@ const Login = (props: {
                 <Link color={'blue.400'}>Forgot password?</Link>
               </Stack>
               <Button
-                bg={'blue.400'}
+                bg={'purple.500'}
                 color={'white'}
                 _hover={{
                   bg: 'blue.500',
