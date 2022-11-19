@@ -10,11 +10,15 @@ const config: ThemeConfig = {
 };
 
 export const theme = extendTheme({
+  error: '#FF0000',
+  success: '#023901',
+  primary: '#FFFFFF',
+  secondary: '#8E46A0',
   colors: {
     brand: {
       black: '#1E1E1E',
       darkpurple: '#8E46A0',
-      lightpurple: '#9A8AA6',
+      lightpurple: '#9586A0',
       verylightpurple: '#DBD0E3',
       white: '#FFFFFF',
       darkyellow: '#B19F5D',
