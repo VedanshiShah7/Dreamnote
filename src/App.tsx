@@ -108,7 +108,23 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/notes' element={<Notes />} />
           <Route path='/synthesis' element={<Synthesis />} />
+<<<<<<< Updated upstream
           <Route path='/login' element={<Login />} />
+=======
+          <Route path='/login' element={
+            <Login 
+              email={email} 
+              setEmail={setEmail} 
+              password={password}
+              setPassword={setPassword}
+              handleLogin={handleLogin}
+              handleSignUp={handleSignUp}
+              handleLogout={handleLogout}
+              hasAccount={hasAccount}
+              setHasAccount={setHasAccount}
+              emailError={emailError}
+              passwordError={passwordError}/>} />
+>>>>>>> Stashed changes
         </Routes>
       </Box>
     </>
