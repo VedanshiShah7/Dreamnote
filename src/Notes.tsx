@@ -7,20 +7,12 @@ import {
   CardFooter,
   Heading,
   Button,
-  useDisclosure,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  Input,
   Tag,
   VStack,
+  HStack,
 } from '@chakra-ui/react';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface Note {
   title: string;
@@ -28,8 +20,6 @@ interface Note {
   id: string;
   tags: string[];
 }
-
-const tags = ['tag1', 'tag2', 'tag3', 'tag4'];
 
 const notes: Note[] = [
   {
@@ -75,8 +65,22 @@ function NoteCard({ note }: { note: Note }) {
           {note.text}
         </Text>
       </CardBody>
-      <CardFooter>
-        <Button>Save</Button>
+      <CardFooter justifyContent='space-between'>
+        <HStack>
+          {note.tags.map(tag => (
+            <Tag size='md' colorScheme='purple'>
+              {tag}
+            </Tag>
+          ))}
+        </HStack>
+        <HStack>
+          <Button colorScheme='blue' ml='10px'>
+            Edit
+          </Button>
+          <Button colorScheme='green' ml='10px'>
+            Save
+          </Button>
+        </HStack>
       </CardFooter>
     </Card>
   );
@@ -91,39 +95,35 @@ function Tags({
   setTags: (tags: string[]) => void;
   allTags: string[];
 }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const toggleTag = useCallback(
+    (tag: string) => {
+      if (tags.includes(tag)) {
+        setTags(tags.filter(t => t !== tag));
+      } else {
+        setTags([...tags, tag]);
+      }
+    },
+    [tags, setTags],
+  );
   return (
     <>
-      <Button colorScheme='teal' onClick={onOpen}>
-        Open
-      </Button>
-      <Drawer isOpen={isOpen} placement='left' onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Select Filter Tags</DrawerHeader>
-          <DrawerBody>
-            <VStack>
-              {allTags.map(tag => (
-                <Tag
-                  size='lg'
-                  key={tag}
-                  variant={tags.includes(tag) ? 'solid' : 'outline'}
-                  colorScheme='teal'>
-                  {tag}
-                </Tag>
-              ))}
-            </VStack>
-          </DrawerBody>
-          <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme='blue'>Save</Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <VStack justifyContent='flex-start'>
+        <Heading minWidth='12rem' size='md'>
+          Select Filter Tags
+        </Heading>
+        {allTags.map(tag => (
+          <Tag
+            size='lg'
+            minW='6rem'
+            justifyContent='center'
+            key={tag}
+            variant={tags.includes(tag) ? 'solid' : 'outline'}
+            colorScheme='purple'
+            onClick={() => toggleTag(tag)}>
+            {tag}
+          </Tag>
+        ))}
+      </VStack>
     </>
   );
 }
@@ -137,7 +137,7 @@ function Notes() {
   const allTags = Array.from(new Set(notes.flatMap(note => note.tags)));
   const [tags, setTags] = useState<string[]>([]);
   return (
-    <>
+    <HStack alignItems='flex-start'>
       <Tags tags={tags} setTags={setTags} allTags={allTags} />
       <Flex wrap='wrap' gap={5} justifyContent='center'>
         {notes
@@ -146,7 +146,7 @@ function Notes() {
             <NoteCard note={note} />
           ))}
       </Flex>
-    </>
+    </HStack>
   );
 }
 

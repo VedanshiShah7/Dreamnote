@@ -12,8 +12,9 @@ const config: ThemeConfig = {
 export const theme = extendTheme({
   error: '#FF0000',
   success: '#023901',
-  primary: '#FFFFFF',
-  secondary: '#8E46A0',
+  text: '#FFFFFF',
+  primary: '#8E46A0',
+  secondary: '#9586A0',
   colors: {
     brand: {
       black: '#1E1E1E',
