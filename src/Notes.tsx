@@ -1,3 +1,4 @@
+import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Flex,
   Text,
@@ -10,6 +11,24 @@ import {
   Tag,
   VStack,
   HStack,
+  Box,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  useEditableControls,
+  ButtonGroup,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  IconButton,
+  Input,
+  Textarea,
+  EditableTextarea,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import React, { useCallback, useState } from 'react';
@@ -21,7 +40,7 @@ interface Note {
   tags: string[];
 }
 
-const notes: Note[] = [
+const defaultNotes: Note[] = [
   {
     title: 'Note 1',
     text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, et natus! Quasi eveniet nobis voluptas accusantium placeat, maxime sint facilis recusandae perferendis! Qui tempora cum eius, consequuntur quae commodi, non expedita, nobis magni ipsam eos eveniet! Est similique quas omnis cum eos, tempora quam quisquam natus deserunt unde reiciendis nam?',
@@ -54,35 +73,86 @@ const notes: Note[] = [
   },
 ];
 
-function NoteCard({ note }: { note: Note }) {
+function NoteModal({
+  note,
+  isOpen,
+  close,
+  updateNote,
+}: {
+  note: Note;
+  isOpen: boolean;
+  close: () => void;
+  updateNote: (note: Note) => void;
+}) {
+  const [value, setValue] = useState(note.text);
+  function EditableControls() {
+    const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } =
+      useEditableControls();
+
+    return isEditing ? (
+      <ButtonGroup justifyContent='flex-end' size='sm'>
+        <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
+        <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+      </ButtonGroup>
+    ) : (
+      <Flex justifyContent='flex-end'>
+        <IconButton size='sm' icon={<EditIcon />} {...getEditButtonProps()} />
+      </Flex>
+    );
+  }
   return (
-    <Card>
-      <CardHeader>
-        <Heading size='md'>{note.title}</Heading>
-      </CardHeader>
-      <CardBody>
-        <Text pt='2' fontSize='sm' maxWidth='20rem'>
-          {note.text}
-        </Text>
-      </CardBody>
-      <CardFooter justifyContent='space-between'>
-        <HStack>
+    <Modal isOpen={isOpen} onClose={close}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{note.title}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Editable
+            defaultValue={note.text}
+            fontSize='md'
+            isPreviewFocusable={false}
+            startWithEditView
+            onSubmit={() => updateNote({ ...note, text: value })}>
+            <EditablePreview noOfLines={15} />
+            <EditableTextarea
+              value={value}
+              onChange={e => {
+                setValue(e.target.value);
+              }}
+              minHeight='20rem'
+              minWidth='20rem'
+            />
+            <EditableControls />
+          </Editable>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+function NoteCard({ note, updateNote }: { note: Note; updateNote: (note: Note) => void }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <Card bg='purple.100' onClick={onOpen}>
+        <CardHeader>
+          <Heading size='md'>{note.title}</Heading>
+        </CardHeader>
+        <CardBody>
+          <Text pt='2' fontSize='sm' maxWidth='20rem'>
+            {note.text}
+          </Text>
+        </CardBody>
+        <CardFooter>
           {note.tags.map(tag => (
-            <Tag size='md' colorScheme='purple'>
+            <Tag size='md' colorScheme='purple.300'>
               {tag}
             </Tag>
           ))}
-        </HStack>
-        <HStack>
-          <Button colorScheme='blue' ml='10px'>
-            Edit
-          </Button>
-          <Button colorScheme='green' ml='10px'>
-            Save
-          </Button>
-        </HStack>
-      </CardFooter>
-    </Card>
+        </CardFooter>
+      </Card>
+      <NoteModal note={note} isOpen={isOpen} close={onClose} updateNote={updateNote} />
+    </>
   );
 }
 
@@ -105,8 +175,9 @@ function Tags({
     },
     [tags, setTags],
   );
+
   return (
-    <>
+    <Box bg='purple.200' p={4} mr={1} h='100vh'>
       <VStack justifyContent='flex-start'>
         <Heading minWidth='12rem' size='md'>
           Select Filter Tags
@@ -124,7 +195,7 @@ function Tags({
           </Tag>
         ))}
       </VStack>
-    </>
+    </Box>
   );
 }
 
@@ -134,16 +205,24 @@ function containsAll(s1: string[], s2: string[]): boolean {
 }
 
 function Notes() {
+  const [notes, setNotes] = useState(defaultNotes);
+  const updateNote = useCallback(
+    (note: Note) => {
+      setNotes(oldNotes => oldNotes.map(n => (n.id === note.id ? note : n)));
+    },
+    [setNotes],
+  );
+
   const allTags = Array.from(new Set(notes.flatMap(note => note.tags)));
   const [tags, setTags] = useState<string[]>([]);
   return (
     <HStack alignItems='flex-start'>
       <Tags tags={tags} setTags={setTags} allTags={allTags} />
-      <Flex wrap='wrap' gap={5} justifyContent='center'>
+      <Flex wrap='wrap' gap={5} p={4} justifyContent='center'>
         {notes
           .filter(n => containsAll(tags, n.tags))
           .map(note => (
-            <NoteCard note={note} />
+            <NoteCard note={note} updateNote={updateNote} />
           ))}
       </Flex>
     </HStack>
