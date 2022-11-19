@@ -12,7 +12,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import _ from 'lodash';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 interface Note {
   title: string;
