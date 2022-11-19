@@ -27,46 +27,9 @@ import {
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import React, { useCallback, useState } from 'react';
-
-interface Note {
-  title: string;
-  text: string;
-  id: string;
-  tags: string[];
-}
-
-const defaultNotes: Note[] = [
-  {
-    title: 'Note 1',
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, et natus! Quasi eveniet nobis voluptas accusantium placeat, maxime sint facilis recusandae perferendis! Qui tempora cum eius, consequuntur quae commodi, non expedita, nobis magni ipsam eos eveniet! Est similique quas omnis cum eos, tempora quam quisquam natus deserunt unde reiciendis nam?',
-    id: '1',
-    tags: ['tag1', 'tag2'],
-  },
-  {
-    title: 'Note 2',
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, et natus! Quasi eveniet nobis voluptas accusantium placeat, maxime sint facilis recusandae perferendis! Qui tempora cum eius, consequuntur quae commodi, non expedita, nobis magni ipsam eos eveniet! Est similique quas omnis cum eos, tempora quam quisquam natus deserunt unde reiciendis nam?',
-    id: '2',
-    tags: ['tag1', 'tag3'],
-  },
-  {
-    title: 'Note 3',
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, et natus! Quasi eveniet nobis voluptas accusantium placeat, maxime sint facilis recusandae perferendis! Qui tempora cum eius, consequuntur quae commodi, non expedita, nobis magni ipsam eos eveniet! Est similique quas omnis cum eos, tempora quam quisquam natus deserunt unde reiciendis nam?',
-    id: '3',
-    tags: ['tag3'],
-  },
-  {
-    title: 'Note 4',
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, et natus! Quasi eveniet nobis voluptas accusantium placeat, maxime sint facilis recusandae perferendis! Qui tempora cum eius, consequuntur quae commodi, non expedita, nobis magni ipsam eos eveniet! Est similique quas omnis cum eos, tempora quam quisquam natus deserunt unde reiciendis nam?',
-    id: '4',
-    tags: ['tag3', 'tag4'],
-  },
-  {
-    title: 'Note 5',
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, et natus! Quasi eveniet nobis voluptas accusantium placeat, maxime sint facilis recusandae perferendis! Qui tempora cum eius, consequuntur quae commodi, non expedita, nobis magni ipsam eos eveniet! Est similique quas omnis cum eos, tempora quam quisquam natus deserunt unde reiciendis nam?',
-    id: '5',
-    tags: ['tag2', 'tag4'],
-  },
-];
+import Synthesis from './Synthesis';
+import defaultNotes from './defaultNotes';
+import { Note } from './App';
 
 function NoteModal({
   note,
@@ -98,7 +61,7 @@ function NoteModal({
   return (
     <Modal isOpen={isOpen} onClose={close}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent minWidth='50rem'>
         <ModalHeader>{note.title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -106,7 +69,6 @@ function NoteModal({
             defaultValue={note.text}
             fontSize='md'
             isPreviewFocusable={false}
-            startWithEditView
             onSubmit={() => updateNote({ ...note, text: value })}>
             <EditablePreview noOfLines={15} />
             <EditableTextarea
@@ -129,21 +91,24 @@ function NoteCard({ note, updateNote }: { note: Note; updateNote: (note: Note) =
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Card bg='purple.100' onClick={onOpen}>
+      <Card bg='purple.100'>
         <CardHeader>
           <Heading size='md'>{note.title}</Heading>
         </CardHeader>
-        <CardBody>
+        <CardBody onClick={onOpen}>
           <Text pt='2' fontSize='sm' maxWidth='20rem'>
             {note.text}
           </Text>
         </CardBody>
-        <CardFooter>
-          {note.tags.map(tag => (
-            <Tag size='md' colorScheme='purple.300'>
-              {tag}
-            </Tag>
-          ))}
+        <CardFooter justifyContent='space-between'>
+          <HStack>
+            {note.tags.map(tag => (
+              <Tag size='md' colorScheme='cyan'>
+                {tag}
+              </Tag>
+            ))}
+          </HStack>
+          <Synthesis note={note} />
         </CardFooter>
       </Card>
       <NoteModal note={note} isOpen={isOpen} close={onClose} updateNote={updateNote} />
