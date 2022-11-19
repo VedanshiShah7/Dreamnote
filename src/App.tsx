@@ -127,7 +127,7 @@ function App() {
 
   return (
     <>
-      <Box bg='purple.400' px={4}>
+      <Box bg='#8E46A0' px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
