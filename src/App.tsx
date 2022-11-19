@@ -62,6 +62,10 @@ function App() {
   };
 
   const handleLogin = () => {
+    if (!email || !password) {
+      return;
+    }
+    setHasAccount(true);
     navigate('/notes');
     clearErrors();
     fire
@@ -103,6 +107,7 @@ function App() {
   const handleLogout = () => {
     navigate('/');
     fire.auth().signOut();
+    setHasAccount(false);
   };
 
   const authListener = () => {
