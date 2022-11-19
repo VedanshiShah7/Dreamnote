@@ -10,6 +10,7 @@ import {
   Tag,
   VStack,
   HStack,
+  Box,
 } from '@chakra-ui/react';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
@@ -56,7 +57,7 @@ const notes: Note[] = [
 
 function NoteCard({ note }: { note: Note }) {
   return (
-    <Card>
+    <Card bg='purple.100'>
       <CardHeader>
         <Heading size='md'>{note.title}</Heading>
       </CardHeader>
@@ -105,8 +106,9 @@ function Tags({
     },
     [tags, setTags],
   );
+
   return (
-    <>
+    <Box bg='purple.200' p={4} mr={1} h='100vh'>
       <VStack justifyContent='flex-start'>
         <Heading minWidth='12rem' size='md'>
           Select Filter Tags
@@ -124,7 +126,7 @@ function Tags({
           </Tag>
         ))}
       </VStack>
-    </>
+    </Box>
   );
 }
 
@@ -139,7 +141,7 @@ function Notes() {
   return (
     <HStack alignItems='flex-start'>
       <Tags tags={tags} setTags={setTags} allTags={allTags} />
-      <Flex wrap='wrap' gap={5} justifyContent='center'>
+      <Flex wrap='wrap' gap={5} p={4} justifyContent='center'>
         {notes
           .filter(n => containsAll(tags, n.tags))
           .map(note => (

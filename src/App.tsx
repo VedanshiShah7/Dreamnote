@@ -50,7 +50,7 @@ function App() {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box bg='purple.400' px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -105,7 +105,7 @@ function App() {
           </Box>
         ) : null}
       </Box>
-      <Box p={4}>
+      <Box>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/notes' element={<Notes />} />
