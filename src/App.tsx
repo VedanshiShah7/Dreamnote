@@ -21,6 +21,27 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, StarIcon } from '@chakra-ui/icons';
+import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+
+const config: ThemeConfig = {
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+}
+
+export const theme = extendTheme({
+  colors: {
+    brand: {
+      black: '#1E1E1E',
+      darkpurple: '#8E46A0',
+      lightpurple: '#9A8AA6',
+      verylightpurple: '#DBD0E3',
+      white: '#FFFFFF',
+      darkyellow: '#B19F5D',
+      darkcyan: '#B19F5D',
+      darkgreen: '#599369',
+    }
+  }
+})
 
 const Links = ['Dashboard', 'Projects', 'Team'];
 
