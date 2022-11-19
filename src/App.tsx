@@ -61,7 +61,9 @@ function App() {
           />
           <HStack spacing={8} alignItems={'center'}>
             <Box pl={5}>
-              <img src='logo.png' alt='logo' height='40px' width='40px' />
+              <Link to='/'>
+                <img src='logo.png' alt='logo' height='40px' width='40px' />
+              </Link>
             </Box>
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
               {links.map(link => (
