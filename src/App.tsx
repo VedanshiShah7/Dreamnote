@@ -1,14 +1,11 @@
 import React from 'react';
 
 import { ReactNode } from 'react';
-import { Input } from '@chakra-ui/react'
-import { Textarea } from '@chakra-ui/react'
 import {
   Box,
   Flex,
   Avatar,
   HStack,
-  Link,
   IconButton,
   Button,
   Menu,
@@ -20,13 +17,17 @@ import {
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, StarIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { Link, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import Notes from './Notes';
+import Synthesis from './Synthesis';
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
   useSystemColorMode: false,
-}
+};
 
 export const theme = extendTheme({
   colors: {
@@ -39,66 +40,37 @@ export const theme = extendTheme({
       darkyellow: '#B19F5D',
       darkcyan: '#B19F5D',
       darkgreen: '#599369',
-    }
-  }
-})
+    },
+  },
+});
 
-const Links = ['Dashboard', 'Projects', 'Team'];
-
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
+const NavLink = ({ children, to }: { children: ReactNode; to: string }) => (
+  <Box
     px={2}
     py={1}
     rounded={'md'}
     _hover={{
       textDecoration: 'none',
       bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
+    }}>
+    <Link to={to}>{children}</Link>
+  </Box>
 );
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  let [value, setValue] = React.useState('')
-
-  let handleInputChange = (e: any) => {
-    let inputValue = e.target.value
-    setValue(inputValue)
+  const loggedIn = false;
+  const links = [
+    { text: 'Notes', path: 'notes' },
+    { text: 'Synthesis', path: 'synthesis' },
+  ];
+  if (!loggedIn) {
+    links.push({ text: 'Log In', path: 'login' });
   }
-
-
-  const params = {
-    method: 'POST',
-    //key: 'c227dd46f1329bdf28e5610f3fd9cc5a',
-    lang: 'English',
-    txt: "Cellular respiration is a series of chemical reactions that break down glucose to produce ATP, which may be used as energy to power many reactions throughout the body. There are three main steps of cellular respiration: glycolysis, the citric acid cycle, and oxidative phosphorylation.",
-    tt: 'a',
-    st: "y"
-
-};
-const options = {
-    method: 'POST',
-    body: JSON.stringify( params )  
-};
-
-fetch( 'https://api.meaningcloud.com/topics-2.0?key=c227dd46f1329bdf28e5610f3fd9cc5a&lang=en&txt=Cellular respiration is a series of chemical reactions that break down glucose to produce ATP, which may be used as energy to power many reactions throughout the body. There are three main steps of cellular respiration: glycolysis, the citric acid cycle, and oxidative phosphorylation.&tt=a&st=y', options )
-    .then( response => response.json() )
-    .then( response => {
-       console.log(response)
-    } );
-
- // fetch('https://api.meaningcloud.com/topics-2.0')
-  //.then((response) => response.json())
-  //.then((data) => console.log(data));
-
 
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-      
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -109,25 +81,19 @@ fetch( 'https://api.meaningcloud.com/topics-2.0?key=c227dd46f1329bdf28e5610f3fd9
           />
           <HStack spacing={8} alignItems={'center'}>
             <Box pl={5}>
-              <StarIcon />
+              <img src='logo.png' alt='logo' height='40px' width='40px' />
             </Box>
-            <HStack
-              as={'nav'}
-              spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+            <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
+              {links.map(link => (
+                <NavLink key={link.path} to={link.path}>
+                  {link.text}
+                </NavLink>
               ))}
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
             <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}>
+              <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                 <Avatar
                   size={'sm'}
                   src={
@@ -148,21 +114,24 @@ fetch( 'https://api.meaningcloud.com/topics-2.0?key=c227dd46f1329bdf28e5610f3fd9
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+              {links.map(link => (
+                <NavLink key={link.path} to={link.path}>
+                  {link.text}
+                </NavLink>
               ))}
             </Stack>
           </Box>
         ) : null}
       </Box>
-
-      
-      <Box p={4}>Main Content Here</Box>
-      <Textarea placeholder='Here is a sample placeholder' />
-      <Button> Submit </Button>
+      <Box p={4}>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/notes' element={<Notes />} />
+          <Route path='/synthesis' element={<Synthesis />} />
+        </Routes>
+      </Box>
     </>
   );
 }
-
 
 export default App;
