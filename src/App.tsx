@@ -18,11 +18,31 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-
+import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 import { Link, Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Notes from './Notes';
 import Synthesis from './Synthesis';
+
+const config: ThemeConfig = {
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+};
+
+export const theme = extendTheme({
+  colors: {
+    brand: {
+      black: '#1E1E1E',
+      darkpurple: '#8E46A0',
+      lightpurple: '#9A8AA6',
+      verylightpurple: '#DBD0E3',
+      white: '#FFFFFF',
+      darkyellow: '#B19F5D',
+      darkcyan: '#B19F5D',
+      darkgreen: '#599369',
+    },
+  },
+});
 
 const NavLink = ({ children, to }: { children: ReactNode; to: string }) => (
   <Box
@@ -47,6 +67,7 @@ function App() {
   if (!loggedIn) {
     links.push({ text: 'Log In', path: 'login' });
   }
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -102,7 +123,6 @@ function App() {
           </Box>
         ) : null}
       </Box>
-
       <Box p={4}>
         <Routes>
           <Route path='/' element={<Home />} />
