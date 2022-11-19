@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { ReactNode } from 'react';
+import { Input } from '@chakra-ui/react'
+import { Textarea } from '@chakra-ui/react'
 import {
   Box,
   Flex,
@@ -39,9 +41,16 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  let [value, setValue] = React.useState('')
+
+  let handleInputChange = (e: any) => {
+    let inputValue = e.target.value
+    setValue(inputValue)
+  }
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -99,7 +108,10 @@ function App() {
         ) : null}
       </Box>
 
+      
       <Box p={4}>Main Content Here</Box>
+      <Textarea placeholder='Here is a sample placeholder' />
+      <Button> Submit </Button>
     </>
   );
 }
