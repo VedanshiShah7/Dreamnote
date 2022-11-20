@@ -51,7 +51,7 @@ function Synthesis({ note }: { note: Note }) {
         });
     } else {
     }
-  }, [note]);
+  }, [note.text]);
 
   /** 
   const headers = {
