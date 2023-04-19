@@ -1,4 +1,7 @@
 # Dreamnote
+
+<img src="https://user-images.githubusercontent.com/56982656/233196191-9e13a2f8-8cef-4def-a5ce-506c4edaf615.png" alt="Dreamnote Hackathon Logo" width="150">
+
 IWC Hackathon - note taking feature
 
 Hello! We are Vedanshi, Ariana and Ava and we created Dreamnote! Dreamnote is a platform to take notes and get summarized information with key elements on the notes you have taken. For example, if you are taking notes for class and need to study for a test, you can use our functionality to store those notes and get helpful summaries to prep for exams more efficiently.
